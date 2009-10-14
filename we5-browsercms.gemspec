@@ -4,7 +4,7 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{browsercms}
+  s.name = %q{we5-browsercms}
   s.version = "3.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -226,7 +226,6 @@ Gem::Specification.new do |s|
      "app/views/portlets/portlets/_form.html.erb",
      "app/views/portlets/tag_cloud/_form.html.erb",
      "app/views/portlets/tag_cloud/render.html.erb",
-     "browsercms.gemspec",
      "db/demo/data.rb",
      "db/demo/page_partials/_footer.html.erb",
      "db/demo/page_partials/_header.html.erb",
@@ -1226,7 +1225,8 @@ Gem::Specification.new do |s|
      "rails_generators/portlet/templates/unit_test.erb",
      "templates/blank.rb",
      "templates/demo.rb",
-     "templates/module.rb"
+     "templates/module.rb",
+     "we5-browsercms.gemspec"
   ]
   s.homepage = %q{http://www.browsercms.org}
   s.rdoc_options = ["--charset=UTF-8"]
