@@ -12,7 +12,7 @@ require 'tasks/rails'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "we5-browsercms"
+    gem.name = "browsercms"
     gem.summary = %Q{BrowserCMS is a general purpose, open source Web Content Management System (CMS), written in Ruby on Rails.}
     gem.email = "github@browsermedia.com"
     gem.homepage = "http://www.browsercms.org"
@@ -20,7 +20,7 @@ begin
     gem.rubyforge_project = 'browsercms' # This line would be new
 
     gem.files = Dir["rails/*.rb"]
-    gem.files += Dir["we5-browsercms.gemspec"]
+    gem.files += Dir["browsercms.gemspec"]
     gem.files += Dir["doc/app/**/*"]
     gem.files += Dir["doc/guides/html/**/*"]
     gem.files += Dir["app/**/*"]
