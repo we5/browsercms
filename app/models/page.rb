@@ -150,7 +150,7 @@ class Page < ActiveRecord::Base
           
   def delete_connectors
     connectors.for_page_version(version).all.each{|c| c.destroy }
-  end        
+  end
          
   #This is done to let copy_connectors know which version to pull from
   #copy_connectors will get called later as an after_update callback
