@@ -7,7 +7,7 @@
       }, function(){
         $(this).removeClass('hover')
       }).click(function(){
-        var match = this.id.match(/(.*)_(\d+)/) 
+        var match = this.id.match(/(.*)_(\d+)/)
         var type = match[1];
         var id = match[2];
         $('table.data tbody tr').removeClass('selected');
@@ -44,48 +44,35 @@
   <br clear="all" />
 <% end %>
 
-<div class="roundedcorners">
-  <table id="blocks" class="data">
-    <thead>
-      <tr>
-        <th class="first" colspan="2"><div class="dividers">Version</div></th>
-        <th><div class="dividers">Comment</div></th>
-        <th><div class="dividers">Date</div></th>
-        <th class="last" colspan="2"><div class="dividers">Editor</div></th>
+<table id="blocks" class="data">
+  <thead>
+    <tr>
+      <th class="first">Version</th>
+      <th>Comment</th>
+      <th>Date</th>
+      <th>Editor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @page.versions.all(:order => "version desc").each_with_index do |r, i| %>
+      <% current = @page.version == r.version %>
+      <tr id="revision_<%= r.version %>" <%= 'class="current"' if current %>>
+        <td class="first">
+          <%= "v.#{r.version}" %>
+          <%= '(LIVE)' if @page.version == r.version %>
+          <%= '(CURRENT)' if i == 0 %>
+        </td>
+        <td>
+          <%=h r.version_comment %>
+        </td>
+        <td>
+          <%= r.created_at.strftime("%b %d, %Y %I:%M %p") if r.created_at %>
+        </td>
+        <td>
+          <div><%= r.updated_by.login if r.updated_by %></div>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      <% @page.versions.all(:order => "version desc").each_with_index do |r, i| %>
-        <% current = @page.version == r.version %>
-        <tr id="revision_<%= r.version %>" <%= 'class="current"' if current %>>
-          <td class="first"></td>
-          <td>
-            <div class="dividers">
-              <%= "v.#{r.version}" %>
-              <%= '(LIVE)' if @page.version == r.version %>
-              <%= '(CURRENT)' if i == 0 %>
-            </div>
-          </td>
-          <td>
-            <div class="dividers"><%=h r.version_comment %></div>
-          </td>
-          <td>
-            <div class="dividers"><%= r.created_at.strftime("%b %d, %Y %I:%M %p") if r.created_at %></div>
-          </td>
-          <td>
-            <div><%= r.updated_by.login if r.updated_by %></div>
-          </td>
-          <td class="last"></td>
-        </tr>
-      <% end %>
-      <tr>
-	<td colspan="8" class="buffer"></td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="tl"></div>
-  <div class="tr"></div>
-  <div class="bl"></div>
-  <div class="br"></div>
-</div>
+    <% end %>
+  </tbody>
+</table>
 

@@ -7,46 +7,27 @@
     <% end %>
 <% end %>
 <div class="pad">
-  <div class="roundedcorners">
-    <table class="data">
-      <thead>
+  <table class="data">
+    <thead>
+      <tr>
+        <th class="name first">Name
+        </th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for tg in @taggings %>
         <tr>
-          <th class="name first" colspan="2">
-            <div class="dividers">
-              Name
-            </div>
-          </th>
-          <th class="last" colspan="2">
-            <div class="dividers">
-              Type
-            </div>
-          </th>
+          <td class="name first">
+            <%= link_to h(tg.taggable.name), [:cms, tg.taggable] %>
+          </td>
+          <td class="name">
+            <%=h tg.taggable.display_name %>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        <% for tg in @taggings %>
-          <tr>
-            <td class="first"></td>
-            <td class="name">
-              <div class="dividers">
-                <%= link_to h(tg.taggable.name), [:cms, tg.taggable] %>
-              </div>
-            </td>              
-            <td class="name">
-              <div class="dividers">
-                <%=h tg.taggable.display_name %>
-              </div>
-            </td>
-            <td class="last"></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <div class="tl"></div>
-    <div class="tr"></div>
-    <div class="bl"></div>
-    <div class="br"></div>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
 </div>
 <% if @taggings.total_pages > 1 %>
   <%= render_pagination @taggings, :tag, {:id => @content_block} %>

@@ -50,20 +50,20 @@
     </label>
   </div>
 <% end %>
-    
+
 <%= error_messages_for :connector %>
-    
+
 <table class="data">
   <thead>
     <tr>
-      <th class="name first"><div class="dividers">Name</div></th>
-      <th class="updated"><div class="dividers">Updated</div></th>
-      <th class="used last">Uses</th>
+      <th class="name first">Name</th>
+      <th class="updated">Updated</th>
+      <th class="used">Uses</th>
     </tr>
   </thead>
   <% @blocks.each do |block| %>
     <tr id="<%= block.class.name.underscore %>_<%= block.id %>">
-      <td class="name"><%= block.name %></td>
+      <td class="name first"><%= block.name %></td>
       <td class="updated"><%= block.updated_at.to_formatted_s(:date) %></td>
       <td class="used"><%= link_to_usages(block) %></td>
     </tr>
