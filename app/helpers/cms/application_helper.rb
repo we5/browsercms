@@ -1,6 +1,24 @@
 # Methods added to this helper will be available to all templates in the cms.
 module Cms
   module ApplicationHelper
+
+    def require_stylesheet_link(sources=(), content_area=:html_head)
+      @required_stylesheet_links ||= []
+      new_links = sources.to_a - @required_stylesheet_links
+      if !new_links.empty?
+        @required_stylesheet_links |= new_links
+        content_for(content_area, stylesheet_link_tag(new_links))
+      end
+    end
+
+    def require_javascript_include(sources=(), content_area=:html_head)
+      @required_javascript_includes ||= []
+      new_links = sources.to_a - @required_javascript_includes
+      if !new_links.empty?
+        @required_javascript_includes |= new_links
+        content_for(content_area, javascript_include_tag(new_links))
+      end
+    end
     
     def searchable_sections(selected = nil)
       root = Section.root.first
@@ -24,31 +42,6 @@ module Cms
       text
     end
 
-    def render_connector_and_connectable(connector, connectable)
-      if logged_in? && @mode == "edit" && current_user.able_to_edit?(connector.page)
-        render :partial => 'cms/pages/edit_connector', 
-          :locals => { :connector => connector, :connectable => connectable}
-      else
-        render_connectable(connectable)
-      end
-    end
-    
-    def render_connectable(content_block)
-      if content_block
-        if content_block.class.renderable?
-          logger.info "..... Rendering connectable #{content_block.class} ##{content_block.id} #{"v#{content_block.version}" if content_block.respond_to?(:version)}"
-          content_block.perform_render(@controller)
-        else
-          logger.warn "Connectable #{content_block.class} ##{content_block.id} is not renderable"
-        end
-      else
-        logger.warn "Connectable is null"
-      end    
-    rescue Exception => e
-      logger.error "Error occurred while rendering #{content_block.class}##{content_block.id}: #{e.message}\n#{e.backtrace.join("\n")}"
-      "ERROR: #{e.message}"
-    end
-    
     def action_icon_src(name)
       "cms/icons/actions/#{name}.png"
     end
@@ -59,10 +52,6 @@ module Cms
 
     def status_icon(status, options={})
       image_tag "cms/icons/status/#{status.to_s.underscore}.gif", {:alt => status.to_s.titleize}.merge(options)
-    end
-    
-    def render_cms_toolbar(tab=:dashboard)
-      render :partial => 'layouts/cms_toolbar', :locals => {:tab => tab}    
     end
     
     def link_to_usages(block)
@@ -92,9 +81,6 @@ module Cms
       link_to_function name, "$('#{selector}').attr('checked', false)"
     end
     
-    def able_to?(*perms, &block)
-      yield if current_user.able_to?(*perms)
-    end
     
     def span_tag(content)
       content_tag :span, content

@@ -51,6 +51,18 @@ class SectionTest < ActiveSupport::TestCase
     
     assert_equal @a2, @a.first_page_or_link
   end
+
+  def test_find_first_page_or_link_after_delete
+    @a = Factory(:section, :parent => root_section, :name => "A")
+    @a1 = Factory(:page, :section => @a, :name => "A1")
+    @a2 = Factory(:page, :section => @a, :name => "A2")
+    @a3 = Factory(:page, :section => @a, :name => "A3")
+    assert_equal @a1, @a.first_page_or_link
+    @a1.destroy
+    
+    assert_equal @a2, @a.first_page_or_link
+  end
+
   
   def test_find_by_name_path
     @a = Factory(:section, :parent => root_section, :name => "A")
@@ -121,5 +133,32 @@ class SectionTest < ActiveSupport::TestCase
     @section = Section.new(:name => "FTW", :path => "/whatever")
     assert_valid @section
   end  
-  
+
+  def test_old_syntax_for_marking_group_sections
+    groups = Group.all(&:id)
+    assert_equal Group, groups[0].class, "This is previous"
+
+    groups = Group.all()
+    assert_equal Group, groups[0].class, "No difference between this and the previous call."
+
+    group_ids = Group.all.map(&:id)
+    assert_equal Fixnum, group_ids[0].class
+  end
+
+  def test_new_section_with_groups
+    section = Section.new(:allow_groups=>:all)
+    assert_equal Group.all, section.groups
+
+  end
+
+  def test_new_section_with_no_groups
+    s = Section.new(:allow_groups=>:none)
+    assert_equal 0, s.groups.size
+  end
+
+  def test_create_section
+    s = Section.create!(:name=>"For All", :path=>"/", :allow_groups=>:all)
+
+    assert_equal Group.count, Section.with_path("/").first.groups.size
+  end
 end

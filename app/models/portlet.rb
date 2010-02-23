@@ -1,6 +1,7 @@
 class Portlet < ActiveRecord::Base
 
   validates_presence_of :name
+  is_searchable
 
   #These are here simply to temporarily hold these values
   #Makes it easy to pass them through the process of selecting a portlet type
@@ -82,15 +83,24 @@ class Portlet < ActiveRecord::Base
     @default_template_path ||= "portlets/#{name.tableize.sub('_portlets','')}/render"
   end
 
+  # Called by 'render' to determine if this portlet should render itself using a file (render.html.erb) or using
+  # its 'template' attribute.
   def inline_options
     options = {}
-    options[:inline] = self.template if self.class.render_inline 
+    options[:inline] = self.template if self.class.render_inline && !(self.template.nil? || self.template.blank?)
     options[:type] = self.handler unless self.handler.blank?
     options
   end
 
   def self.handler(handler_type)
     define_method(:handler) { handler_type }
+  end
+
+  # Determines if the template editor in the CMS UI will be enabled when creating or editing instances of this portlet
+  # If enabled, the portlet will use the template code stored in the database. If not, it will render from the render.html.erb
+  # file created.
+  def self.enable_template_editor (enabled)
+    render_inline enabled
   end
 
   def self.render_inline(*args)

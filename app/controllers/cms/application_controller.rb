@@ -1,8 +1,7 @@
 class Cms::ApplicationController < ApplicationController
   include Cms::Authentication::Controller
   include Cms::ErrorHandling
-
-  helper :all # include all helpers, all the time
+  include Cms::DomainSupport
 
   helper Cms::ApplicationHelper
   helper Cms::FormTagHelper
@@ -11,6 +10,7 @@ class Cms::ApplicationController < ApplicationController
   include Cms::PageHelper
   helper Cms::PageHelper
   helper Cms::MenuHelper
+  helper Cms::RenderingHelper
   
   protected
     def escape_javascript(javascript)
@@ -49,16 +49,6 @@ class Cms::ApplicationController < ApplicationController
       before_filter(opts) do |controller|
         raise Cms::Errors::AccessDenied unless controller.send(:current_user).able_to?(*perms)
       end      
-    end  
-  
-    def cms_domain_prefix
-      "cms"
-    end
-  
-    def cms_site?
-      subdomains = request.subdomains
-      subdomains.shift if subdomains.first == "www"
-      subdomains.first == cms_domain_prefix
     end
   
     def url_with_cms_domain_prefix
